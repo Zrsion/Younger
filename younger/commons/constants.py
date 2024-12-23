@@ -53,18 +53,3 @@ class YOUNGER_HANDLE(Constant):
 YoungerHandle = YOUNGER_HANDLE()
 YoungerHandle.initialize()
 YoungerHandle.freeze()
-
-
-class RESOURCE_LABLES(Constant):
-    def initialize(self) -> None:
-        self.ORIGIN = 'origin'
-        self.OWNER = 'owner'
-        self.DOWNLOAD = 'download'
-        self.LIKE = 'like'
-        self.TAG = 'tag'
-        self.README = 'readme'
-        self.ANNOTATIONS = 'annotations'
-
-ResourceLabels = RESOURCE_LABLES()
-ResourceLabels.initialize()
-ResourceLabels.freeze()
