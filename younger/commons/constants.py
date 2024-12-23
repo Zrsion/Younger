@@ -6,7 +6,7 @@
 # Author: Jason Young (杨郑鑫).
 # E-Mail: AI.Jason.Young@outlook.com
 # Last Modified by: Jason Young (杨郑鑫)
-# Last Modified time: 2024-11-27 11:19:10
+# Last Modified time: 2024-12-23 17:01:07
 # Copyright (c) 2024 Yangs.AI
 # 
 # This source code is licensed under the Apache License 2.0 found in the
@@ -40,16 +40,31 @@ class Constant:
 
     @property
     def attributes(self):
-        return list(self._attributes_.keys())
+        return self._attributes_
 
 
 class YOUNGER_HANDLE(Constant):
     def initialize(self) -> None:
         self.MainName = 'Younger'
-        self.AppName = 'Younger-App'
-        self.ToolName = 'Younger-Tool'
-        self.LogicName = 'Younger-Logic'
+        self.AppsName = 'Younger-Apps'
+        self.ToolsName = 'Younger-Tools'
+        self.LogicsName = 'Younger-Logics'
 
 YoungerHandle = YOUNGER_HANDLE()
 YoungerHandle.initialize()
 YoungerHandle.freeze()
+
+
+class RESOURCE_LABLES(Constant):
+    def initialize(self) -> None:
+        self.ORIGIN = 'origin'
+        self.OWNER = 'owner'
+        self.DOWNLOAD = 'download'
+        self.LIKE = 'like'
+        self.TAG = 'tag'
+        self.README = 'readme'
+        self.ANNOTATIONS = 'annotations'
+
+ResourceLabels = RESOURCE_LABLES()
+ResourceLabels.initialize()
+ResourceLabels.freeze()

@@ -2,11 +2,11 @@
 # -*- encoding=utf8 -*-
 
 ########################################################################
-# Created time: 2024-08-27 18:03:44
+# Created time: 2024-12-13 11:29:36
 # Author: Jason Young (杨郑鑫).
 # E-Mail: AI.Jason.Young@outlook.com
 # Last Modified by: Jason Young (杨郑鑫)
-# Last Modified time: 2024-12-09 09:28:02
+# Last Modified time: 2024-12-17 10:31:36
 # Copyright (c) 2024 Yangs.AI
 # 
 # This source code is licensed under the Apache License 2.0 found in the
@@ -14,20 +14,10 @@
 ########################################################################
 
 
-import click
-
-from . import install_plugin_click_group
+from pathlib import Path
 
 
-@click.group(name='apps')
-def apps():
-    pass
-
-
-@install_plugin_click_group('dl', 'younger.apps', 'dl')
-@click.group()
-def dl():
-    pass
-
-
-apps.add_command(dl)
+"""
+..TODO::
+    For Future - ~/.younger directory configuration
+"""
