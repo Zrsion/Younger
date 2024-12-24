@@ -6,7 +6,7 @@
 # Author: Jason Young (杨郑鑫).
 # E-Mail: AI.Jason.Young@outlook.com
 # Last Modified by: Jason Young (杨郑鑫)
-# Last Modified time: 2024-11-28 11:16:09
+# Last Modified time: 2024-12-09 09:19:20
 # Copyright (c) 2024 Yangs.AI
 # 
 # This source code is licensed under the Apache License 2.0 found in the
@@ -14,6 +14,7 @@
 ########################################################################
 
 
+from . import cache
 from . import constants
 from . import download
 from . import hash
