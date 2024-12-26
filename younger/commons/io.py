@@ -6,7 +6,7 @@
 # Author: Jason Young (杨郑鑫).
 # E-Mail: AI.Jason.Young@outlook.com
 # Last Modified by: Jason Young (杨郑鑫)
-# Last Modified time: 2024-12-23 09:46:26
+# Last Modified time: 2024-12-26 10:14:08
 # Copyright (c) 2024 Yangs.AI
 # 
 # This source code is licensed under the Apache License 2.0 found in the
@@ -23,6 +23,8 @@ import shutil
 import tarfile
 import pathlib
 import tomllib
+
+from typing import Any
 
 from younger.commons.hash import hash_bytes
 from younger.commons.logging import logger
@@ -242,3 +244,11 @@ def get_human_readable_size_representation(size_in_bytes: int) -> str:
     p = math.pow(1024, i)
     s = round(size_in_bytes / p, 2)
     return f'{s} {size_name[i]}'
+
+def get_object_with_sorted_dict(object: Any) -> Any:
+    if isinstance(object, dict):
+        return {key: get_object_with_sorted_dict(value) for key, value in sorted(object.items())}
+    elif isinstance(object, list):
+        return [get_object_with_sorted_dict(item) for item in object]
+    else:
+        return object
