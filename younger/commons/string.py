@@ -6,7 +6,7 @@
 # Author: Jason Young (杨郑鑫).
 # E-Mail: AI.Jason.Young@outlook.com
 # Last Modified by: Jason Young (杨郑鑫)
-# Last Modified time: 2024-12-27 16:46:45
+# Last Modified time: 2024-12-27 19:50:19
 # Copyright (c) 2024 Yangs.AI
 # 
 # This source code is licensed under the Apache License 2.0 found in the
@@ -15,6 +15,8 @@
 
 
 import re
+
+from typing import Literal
 
 
 README_TABLE_Pattern = r'(\|?(?:[^\r\n\|]*\|)+(?:[^\r\n]*\|?))\r?\n(\|?(?:(?:\s*:?-+:?\s*)\|)+(?:(?:\s*:?-+:?\s*)\|?))\r?\n((?:\|?(?:(?:[^\r\n\|]*)\|)+(?:(?:(?:[^\r\n\|]*)\|?))\r?\n)+)'
@@ -84,14 +86,28 @@ def extract_possible_digits_from_readme_string(readme: str) -> list[str]:
     return possible_digit
 
 
-def remove_yaml_front_matter_from_readme_string(readme: str) -> str:
+def split_front_matter_from_readme_string(readme: str, type: Literal['YAML', 'TOML'] = 'YAML') -> tuple[str, str]:
+    split_patterns = dict(
+        YAML='---',
+        TOML='+++',
+    )
+    split_pattern = split_patterns[type]
+
+    front_matter = ''
     readme_lines = readme.split('\n')
-    split_pattern = '---'
     if len(readme_lines) <= 2:
-        return '\n'.join(readme_lines)
+        return (front_matter, '\n'.join(readme_lines))
+
     if readme_lines[0].strip() == split_pattern:
         for index, readme_line in enumerate(readme_lines[1:], start=1):
             if readme_line.strip() == split_pattern:
                 break
-        return '\n'.join(readme_lines[index+1:])
-    return '\n'.join(readme_lines)
+            else:
+                front_matter += readme_line + '\n'
+        return (front_matter, '\n'.join(readme_lines[index+1:]))
+    return (front_matter, '\n'.join(readme_lines))
+
+
+def split_camel_case_string(camel_case_string: str) -> list[str]:
+    words = re.finditer('.+?(?:(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|$)', camel_case_string)
+    return [word.group(0) for word in words]
