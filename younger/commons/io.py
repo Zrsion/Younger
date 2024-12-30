@@ -6,7 +6,7 @@
 # Author: Jason Young (杨郑鑫).
 # E-Mail: AI.Jason.Young@outlook.com
 # Last Modified by: Jason Young (杨郑鑫)
-# Last Modified time: 2024-11-28 09:36:13
+# Last Modified time: 2024-12-30 15:40:09
 # Copyright (c) 2024 Yangs.AI
 # 
 # This source code is licensed under the Apache License 2.0 found in the
@@ -15,13 +15,16 @@
 
 
 import os
+import math
 import json
 import pickle
 import psutil
 import shutil
 import tarfile
 import pathlib
-import tomllib
+import tomlkit
+
+from typing import Any
 
 from younger.commons.hash import hash_bytes
 from younger.commons.logging import logger
@@ -159,12 +162,31 @@ def save_pickle(serializable_object: object, filepath: pathlib.Path | str) -> No
 
     return
 
+def loads_json(serialized_object: str) -> object:
+    serializable_object = json.loads(serialized_object)
+    return serializable_object
+
+
+def saves_json(serializable_object: object) -> str:
+    serialized_object = json.dumps(serializable_object, sort_keys=True)
+    return serialized_object
+
+
+def loads_pickle(serialized_object: str) -> object:
+    serializable_object = pickle.loads(serialized_object)
+    return serializable_object
+
+
+def saves_pickle(serializable_object: object) -> str:
+    serialized_object = pickle.dumps(serializable_object)
+    return serialized_object
+
 
 def load_toml(filepath: pathlib.Path | str) -> dict:
     filepath = get_system_depend_path(filepath)
     try:
         with open(filepath, 'rb') as file:
-            config = tomllib.load(file)
+            config = tomlkit.load(file)
     except Exception as exception:
         logger.error(f'An Error occurred while reading serializable object from the \'json\' file: {str(exception)}')
         raise exception
@@ -177,7 +199,7 @@ def save_toml(config: dict, filepath: pathlib.Path | str) -> None:
     try:
         create_dir(filepath.parent)
         with open(filepath, 'w') as file:
-            json.dump(config, file)
+            tomlkit.dump(config, file)
     except Exception as exception:
         logger.error(f'An Error occurred while writing serializable object into the \'json\' file: {str(exception)}')
         raise exception
@@ -212,3 +234,21 @@ def get_dir_size(dirpath: pathlib.Path | str) -> int:
             file_path = os.path.join(root, file)
             total_size += os.path.getsize(file_path)
     return total_size
+
+
+def get_human_readable_size_representation(size_in_bytes: int) -> str:
+    if size_in_bytes == 0:
+        return "0 B"
+    size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+    i = int(math.floor(math.log(size_in_bytes, 1024)))
+    p = math.pow(1024, i)
+    s = round(size_in_bytes / p, 2)
+    return f'{s} {size_name[i]}'
+
+def get_object_with_sorted_dict(object: Any) -> Any:
+    if isinstance(object, dict):
+        return {key: get_object_with_sorted_dict(value) for key, value in sorted(object.items())}
+    elif isinstance(object, list):
+        return [get_object_with_sorted_dict(item) for item in object]
+    else:
+        return object

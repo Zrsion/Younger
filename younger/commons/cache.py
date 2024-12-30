@@ -6,7 +6,7 @@
 # Author: Jason Young (杨郑鑫).
 # E-Mail: AI.Jason.Young@outlook.com
 # Last Modified by: Jason Young (杨郑鑫)
-# Last Modified time: 2024-12-09 09:28:02
+# Last Modified time: 2024-11-27 15:25:45
 # Copyright (c) 2024 Yangs.AI
 # 
 # This source code is licensed under the Apache License 2.0 found in the
@@ -14,20 +14,21 @@
 ########################################################################
 
 
-import click
+import os
+import pathlib
 
-from . import install_plugin_click_group
-
-
-@click.group(name='apps')
-def apps():
-    pass
+from younger.commons.constants import YoungerHandle
 
 
-@install_plugin_click_group('dl', 'younger.apps', 'dl')
-@click.group()
-def dl():
-    pass
+cache_root: pathlib.Path = pathlib.Path(os.getcwd()).joinpath(f'{YoungerHandle.MainName}/{YoungerHandle.LogicsName}')
 
 
-apps.add_command(dl)
+def set_cache_root(dirpath: pathlib.Path) -> None:
+    assert isinstance(dirpath, pathlib.Path)
+    global cache_root
+    cache_root = dirpath
+    return
+
+
+def get_cache_root() -> pathlib.Path:
+    return cache_root
