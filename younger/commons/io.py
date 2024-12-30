@@ -6,7 +6,7 @@
 # Author: Jason Young (杨郑鑫).
 # E-Mail: AI.Jason.Young@outlook.com
 # Last Modified by: Jason Young (杨郑鑫)
-# Last Modified time: 2024-12-26 10:14:08
+# Last Modified time: 2024-12-30 15:40:09
 # Copyright (c) 2024 Yangs.AI
 # 
 # This source code is licensed under the Apache License 2.0 found in the
@@ -22,7 +22,7 @@ import psutil
 import shutil
 import tarfile
 import pathlib
-import tomllib
+import tomlkit
 
 from typing import Any
 
@@ -186,7 +186,7 @@ def load_toml(filepath: pathlib.Path | str) -> dict:
     filepath = get_system_depend_path(filepath)
     try:
         with open(filepath, 'rb') as file:
-            config = tomllib.load(file)
+            config = tomlkit.load(file)
     except Exception as exception:
         logger.error(f'An Error occurred while reading serializable object from the \'json\' file: {str(exception)}')
         raise exception
@@ -199,7 +199,7 @@ def save_toml(config: dict, filepath: pathlib.Path | str) -> None:
     try:
         create_dir(filepath.parent)
         with open(filepath, 'w') as file:
-            json.dump(config, file)
+            tomlkit.dump(config, file)
     except Exception as exception:
         logger.error(f'An Error occurred while writing serializable object into the \'json\' file: {str(exception)}')
         raise exception
