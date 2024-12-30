@@ -6,7 +6,7 @@
 # Author: Jason Young (杨郑鑫).
 # E-Mail: AI.Jason.Young@outlook.com
 # Last Modified by: Jason Young (杨郑鑫)
-# Last Modified time: 2024-12-23 09:46:26
+# Last Modified time: 2024-12-30 15:40:09
 # Copyright (c) 2024 Yangs.AI
 # 
 # This source code is licensed under the Apache License 2.0 found in the
@@ -22,7 +22,9 @@ import psutil
 import shutil
 import tarfile
 import pathlib
-import tomllib
+import tomlkit
+
+from typing import Any
 
 from younger.commons.hash import hash_bytes
 from younger.commons.logging import logger
@@ -184,7 +186,7 @@ def load_toml(filepath: pathlib.Path | str) -> dict:
     filepath = get_system_depend_path(filepath)
     try:
         with open(filepath, 'rb') as file:
-            config = tomllib.load(file)
+            config = tomlkit.load(file)
     except Exception as exception:
         logger.error(f'An Error occurred while reading serializable object from the \'json\' file: {str(exception)}')
         raise exception
@@ -197,7 +199,7 @@ def save_toml(config: dict, filepath: pathlib.Path | str) -> None:
     try:
         create_dir(filepath.parent)
         with open(filepath, 'w') as file:
-            json.dump(config, file)
+            tomlkit.dump(config, file)
     except Exception as exception:
         logger.error(f'An Error occurred while writing serializable object into the \'json\' file: {str(exception)}')
         raise exception
@@ -242,3 +244,11 @@ def get_human_readable_size_representation(size_in_bytes: int) -> str:
     p = math.pow(1024, i)
     s = round(size_in_bytes / p, 2)
     return f'{s} {size_name[i]}'
+
+def get_object_with_sorted_dict(object: Any) -> Any:
+    if isinstance(object, dict):
+        return {key: get_object_with_sorted_dict(value) for key, value in sorted(object.items())}
+    elif isinstance(object, list):
+        return [get_object_with_sorted_dict(item) for item in object]
+    else:
+        return object
