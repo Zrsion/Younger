@@ -6,7 +6,7 @@
 # Author: Jason Young (杨郑鑫).
 # E-Mail: AI.Jason.Young@outlook.com
 # Last Modified by: Jason Young (杨郑鑫)
-# Last Modified time: 2024-12-30 15:40:09
+# Last Modified time: 2025-01-03 22:00:48
 # Copyright (c) 2024 Yangs.AI
 # 
 # This source code is licensed under the Apache License 2.0 found in the
@@ -105,11 +105,11 @@ def tar_extract(archive_filepath: pathlib.Path | str, wo: pathlib.Path | str, co
         tar.extractall(wo)
 
 
-def load_json(filepath: pathlib.Path | str) -> object:
+def load_json(filepath: pathlib.Path | str, cls: json.JSONDecoder | None = None) -> object:
     filepath = get_system_depend_path(filepath)
     try:
         with open(filepath, 'r') as file:
-            serializable_object = json.load(file)
+            serializable_object = json.load(file, cls=cls)
     except Exception as exception:
         logger.error(f'An Error occurred while reading serializable object from the \'json\' file: {str(exception)}')
         raise exception
@@ -117,12 +117,12 @@ def load_json(filepath: pathlib.Path | str) -> object:
     return serializable_object
 
 
-def save_json(serializable_object: object, filepath: pathlib.Path | str, indent: int | str | None = None) -> None:
+def save_json(serializable_object: object, filepath: pathlib.Path | str, cls: json.JSONEncoder | None = None, indent: int | str | None = None) -> None:
     filepath = get_system_depend_path(filepath)
     try:
         create_dir(filepath.parent)
         with open(filepath, 'w') as file:
-            json.dump(serializable_object, file, indent=indent)
+            json.dump(serializable_object, file, indent=indent, cls=cls)
     except Exception as exception:
         logger.error(f'An Error occurred while writing serializable object into the \'json\' file: {str(exception)}')
         raise exception
@@ -162,13 +162,14 @@ def save_pickle(serializable_object: object, filepath: pathlib.Path | str) -> No
 
     return
 
-def loads_json(serialized_object: str) -> object:
-    serializable_object = json.loads(serialized_object)
+
+def loads_json(serialized_object: str, cls: json.JSONDecoder | None = None) -> object:
+    serializable_object = json.loads(serialized_object, cls=cls)
     return serializable_object
 
 
-def saves_json(serializable_object: object) -> str:
-    serialized_object = json.dumps(serializable_object, sort_keys=True)
+def saves_json(serializable_object: object, cls: json.JSONEncoder | None = None) -> str:
+    serialized_object = json.dumps(serializable_object, sort_keys=True, cls=cls)
     return serialized_object
 
 
@@ -244,6 +245,7 @@ def get_human_readable_size_representation(size_in_bytes: int) -> str:
     p = math.pow(1024, i)
     s = round(size_in_bytes / p, 2)
     return f'{s} {size_name[i]}'
+
 
 def get_object_with_sorted_dict(object: Any) -> Any:
     if isinstance(object, dict):
