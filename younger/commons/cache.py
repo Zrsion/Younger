@@ -6,7 +6,7 @@
 # Author: Jason Young (杨郑鑫).
 # E-Mail: AI.Jason.Young@outlook.com
 # Last Modified by: Jason Young (杨郑鑫)
-# Last Modified time: 2024-11-27 15:25:45
+# Last Modified time: 2025-01-05 20:59:42
 # Copyright (c) 2024 Yangs.AI
 # 
 # This source code is licensed under the Apache License 2.0 found in the
@@ -20,15 +20,15 @@ import pathlib
 from younger.commons.constants import YoungerHandle
 
 
-cache_root: pathlib.Path = pathlib.Path(os.getcwd()).joinpath(f'{YoungerHandle.MainName}/{YoungerHandle.LogicsName}')
+CACHE_ROOT: pathlib.Path = pathlib.Path.home().joinpath(f'.cache/{YoungerHandle.MainName}')
 
 
 def set_cache_root(dirpath: pathlib.Path) -> None:
     assert isinstance(dirpath, pathlib.Path)
-    global cache_root
-    cache_root = dirpath
+    global CACHE_ROOT
+    CACHE_ROOT = dirpath
     return
 
 
 def get_cache_root() -> pathlib.Path:
-    return cache_root
+    return CACHE_ROOT
