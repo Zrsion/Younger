@@ -6,7 +6,7 @@
 # Author: Jason Young (杨郑鑫).
 # E-Mail: AI.Jason.Young@outlook.com
 # Last Modified by: Jason Young (杨郑鑫)
-# Last Modified time: 2024-11-28 09:36:06
+# Last Modified time: 2025-01-09 10:42:45
 # Copyright (c) 2024 Yangs.AI
 # 
 # This source code is licensed under the Apache License 2.0 found in the
@@ -20,6 +20,7 @@ import pathlib
 import logging
 
 from typing import Literal
+from logging import Logger
 
 from younger.commons.constants import YoungerHandle
 
