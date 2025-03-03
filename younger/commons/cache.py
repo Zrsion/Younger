@@ -6,7 +6,7 @@
 # Author: Jason Young (杨郑鑫).
 # E-Mail: AI.Jason.Young@outlook.com
 # Last Modified by: Jason Young (杨郑鑫)
-# Last Modified time: 2024-11-27 15:25:45
+# Last Modified time: 2025-01-06 20:50:56
 # Copyright (c) 2024 Yangs.AI
 # 
 # This source code is licensed under the Apache License 2.0 found in the
@@ -14,21 +14,92 @@
 ########################################################################
 
 
-import os
+import tqdm
 import pathlib
 
+
+from typing import Iterator
+
+from younger.commons.io import load_pickle, save_pickle
 from younger.commons.constants import YoungerHandle
 
 
-cache_root: pathlib.Path = pathlib.Path(os.getcwd()).joinpath(f'{YoungerHandle.MainName}/{YoungerHandle.LogicsName}')
+CACHE_ROOT: pathlib.Path = pathlib.Path.home().joinpath(f'.cache/{YoungerHandle.MainName}')
 
 
 def set_cache_root(dirpath: pathlib.Path) -> None:
     assert isinstance(dirpath, pathlib.Path)
-    global cache_root
-    cache_root = dirpath
+    global CACHE_ROOT
+    CACHE_ROOT = dirpath
     return
 
 
 def get_cache_root() -> pathlib.Path:
-    return cache_root
+    return CACHE_ROOT
+
+
+class CachedChunks(object):
+    _status_cache_filename_ = 'status'
+    _config_cache_filename_ = 'config'
+    _chunks_cache_filename_ = 'chunks'
+    def __init__(self, cache_dirpath: pathlib.Path, iterator: Iterator, size_of_chunk: int):
+        self._cache_dirpath = cache_dirpath
+        self._status_filepath = self._cache_dirpath.joinpath(self.__class__._status_cache_filename_)
+        self._config_filepath = self._cache_dirpath.joinpath(self.__class__._config_cache_filename_)
+        self._chunks_filepath = self._cache_dirpath.joinpath(self.__class__._chunks_cache_filename_)
+
+        if self._config_filepath.is_file():
+            config = load_pickle(self._config_filepath)
+            self._size_of_chunk = config['size_of_chunk']
+            self._length_of_itr = config['length_of_itr']
+            self._num_of_chunks = config['num_of_chunks']
+
+            self._current_index = load_pickle(self._status_filepath)
+        else:
+            self._size_of_chunk = size_of_chunk
+            self._length_of_itr = 0
+            self._num_of_chunks = 0
+
+            self._current_index = 0
+
+            chunk = list()
+            for item in tqdm.tqdm(iterator):
+                chunk.append(item)
+                if len(chunk) == self._size_of_chunk:
+                    save_pickle(chunk, self._chunks_filepath.with_suffix(f'.{self._num_of_chunks}'))
+                    chunk.clear()
+                    self._num_of_chunks += 1
+                self._length_of_itr += 1
+
+            if len(chunk) != 0:
+                save_pickle(chunk, self._chunks_filepath.with_suffix(f'.{self._num_of_chunks}'))
+                self._num_of_chunks += 1
+
+            config = dict(
+                size_of_chunk = self._size_of_chunk,
+                length_of_itr = self._length_of_itr,
+                num_of_chunks = self._num_of_chunks,
+            )
+            save_pickle(config, self._config_filepath)
+            save_pickle(self._current_index, self._status_filepath)
+
+    def __iter__(self):
+        while self._current_index < self._num_of_chunks:
+            chunk = load_pickle(self._chunks_filepath.with_suffix(f'.{self._current_index}'))
+            yield chunk
+            self._current_index += 1
+            save_pickle(self._current_index, self._status_filepath)
+
+    def __next__(self):
+        return next(self)
+
+    def __len__(self):
+        return self._length_of_itr
+
+    @property
+    def current_position(self):
+        return min(self._current_index * self._size_of_chunk, self._length_of_itr)
+
+    @property
+    def current_chunk_id(self):
+        return self._current_index
