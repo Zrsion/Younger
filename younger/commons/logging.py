@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
-# Copyright (c) Jason Young (杨郑鑫).
-#
-# E-Mail: <AI.Jason.Young@outlook.com>
-# 2023-10-06 06:51
-#
-# This source code is licensed under the Apache-2.0 license found in the
+# -*- encoding=utf8 -*-
+
+########################################################################
+# Created time: 2024-08-27 18:03:44
+# Author: Jason Young (杨郑鑫).
+# E-Mail: AI.Jason.Young@outlook.com
+# Last Modified by: Jason Young (杨郑鑫)
+# Last Modified time: 2025-01-10 10:12:16
+# Copyright (c) 2024 Yangs.AI
+# 
+# This source code is licensed under the Apache License 2.0 found in the
 # LICENSE file in the root directory of this source tree.
+########################################################################
 
 
 import os
@@ -74,7 +78,7 @@ def set_logger(
     if mode in {'both', 'file'}:
         if logging_filepath is None:
             logging_dirpath = pathlib.Path(os.getcwd())
-            logging_filename = 'younger.log'
+            logging_filename = 'default.log'
             logging_filepath = logging_dirpath.joinpath(logging_filename)
             naive_log(f'Logging filepath is not specified, logging file will be saved in the working directory: \'{logging_dirpath}\', filename: \'{logging_filename}\'', silence=not show_setting_log)
         else:

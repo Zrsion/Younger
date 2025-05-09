@@ -1,0 +1,85 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Younger"
+description = "A Younger Project for Artificial Intelligence: Datasets, Benchmarks, and Applications."
+version = "0.0.1alpha2"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "Apache Software License"}
+keywords = ["Younger", "Benchmark", "Artificial Intelligence"]
+authors = [{name = "Jason-Young-AI", email = "AI.Jason.Young@outlook.com"}]
+maintainers = [{name = "Jason-Young-AI", email = "AI.Jason.Young@outlook.com"}]
+classifiers=[
+    "Development Status :: 3 - Alpha",
+
+    'Intended Audience :: Developers',
+    'Intended Audience :: Education',
+    'Intended Audience :: Science/Research',
+    'Topic :: Scientific/Engineering :: Artificial Intelligence',
+
+    'License :: OSI Approved :: Apache Software License',
+
+    'Operating System :: OS Independent',
+
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.11',
+    "Programming Language :: Python :: 3 :: Only",
+]
+
+dependencies = [
+    "tqdm",
+    "click",
+    "fsspec",
+    "psutil",
+    "tomlkit",
+    "python-semantic-release"
+]
+
+[project.optional-dependencies]
+apps = [
+    "younger-apps-dl",
+]
+apps-dl = [
+    "younger-apps-dl",
+]
+
+tools = [
+    "younger-tools-bench",
+]
+tools-bench = [
+    "younger-tools-bench",
+]
+
+logics = [
+    "younger-logics-ir",
+    "younger-logics-core",
+]
+logics-ir = [
+    "younger-logics-ir",
+]
+logics-core = [
+    "younger-logics-core",
+]
+
+develop = [
+    "sphinx"
+]
+
+[project.urls]
+Homepage = "https://younger.yangs.ai/"
+Issues = "https://github.com/Yangs-AI/Younger/issues"
+Source = "https://github.com/Yangs-AI/Younger"
+Repository = "https://github.com/Yangs-AI/Younger.git"
+
+[project.scripts]
+younger = "younger.commands.main:main"
+
+[project.entry-points."younger.apps"]
+dl = "younger_apps_dl.commands.main:main"
+
+[project.entry-points."younger.logics"]
+ir = "younger_logics_ir.commands.main:main"
+core = "younger_logics_core.commands.main:main"

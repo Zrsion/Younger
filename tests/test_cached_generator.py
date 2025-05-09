@@ -2,22 +2,28 @@
 # -*- encoding=utf8 -*-
 
 ########################################################################
-# Created time: 2024-08-27 18:03:44
+# Created time: 2025-01-06 19:27:28
 # Author: Jason Young (杨郑鑫).
 # E-Mail: AI.Jason.Young@outlook.com
 # Last Modified by: Jason Young (杨郑鑫)
-# Last Modified time: 2024-12-09 09:19:20
-# Copyright (c) 2024 Yangs.AI
+# Last Modified time: 2025-01-06 19:50:37
+# Copyright (c) 2025 Yangs.AI
 # 
 # This source code is licensed under the Apache License 2.0 found in the
 # LICENSE file in the root directory of this source tree.
 ########################################################################
 
 
-from . import cache
-from . import constants
-from . import download
-from . import hash
-from . import io
-from . import logging
-from . import version
+import pathlib
+
+from younger.commons.cache import CachedGenerator
+
+
+itr = CachedGenerator(pathlib.Path('./Test/itr'), range(100000), 1000)
+
+
+print(len(itr))
+print(all([index == i for index, i in enumerate(itr)]))
+
+# for index, i in enumerate(itr):
+#     print(index, i)
